@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "Firefox Scryfall Search",
+  "description" : "To use, type '!scry' plus a search term into the url bar.",
+  "version": "1.0",
+  //  "homepage_url": "my cool link here",
+
+  "omnibox": { "keyword" : "!scry" },
+  "permissions": ["*://scryfall.com/*"],
+
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
