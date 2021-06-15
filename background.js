@@ -1,5 +1,5 @@
-const BASE_URL = "https://scryfall.com/";
-const SEARCH_URL = BASE_URL += "search?q=";
+const SOURCE_URL = "https://scryfall.com/";
+const SEARCH_URL = SOURCE_URL + "search?q=";
 
 /*
 example project:
@@ -37,11 +37,11 @@ search url: base url + /search?q=
 * the address bar and typed the keyword, followed by a space ("!scry ")
 */
 browser.omnibox.onInputChanged.addListener((text, addSuggestions) => {
-	let headers = new Headers({"Accept": "application/json"});
+	let headers = new Headers({"Accept": "text/html"});
 	let init = {method: 'GET', headers};
 	let url = buildScryfallURL(text);
 	let request = new Request(url, init);
-
+	
 	fetch(request)
 		.then(createSuggestionsFromResponse)
 		.then(addSuggestions);
@@ -67,9 +67,18 @@ browser.omnibox.onInputEntered.addListener((text, disposition) => {
 });
 
 function buildScryfallURL(text) {
-	
+	console.log('Omnibox input changed, text is: ' + text);
+	let returnUrl = SEARCH_URL + text;
+	console.log('Returned url = ' + returnUrl)
+	return returnUrl;
 }
 
 function createSuggestionsFromResponse(response) {
-
+	return new Promise(resolve => {
+		let suggestions = [{
+			content: response.url,
+			description: 'search result'
+		}];
+		return resolve(suggestions);
+	});
 }
