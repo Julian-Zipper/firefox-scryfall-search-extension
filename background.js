@@ -36,23 +36,15 @@ search url: base url + /search?q=
 * Fired whenever the user's input changes, after they have focused
 * the address bar and typed the keyword, followed by a space ("!scry ")
 */
-browser.omnibox.onInputChanged.addListener((text, addSuggestions) => {
-	let headers = new Headers({"Accept": "text/html"});
-	let init = {method: 'GET', headers};
-	let url = buildScryfallURL(text);
-	let request = new Request(url, init);
-	
-	fetch(request)
-		.then(createSuggestionsFromResponse)
-		.then(addSuggestions);
+browser.omnibox.onInputChanged.addListener((input, suggest) => {
+	suggest(getSuggestionUrl(input));
 });
 
 /**
 * Fired when the user accepts the extensions suggestion
 * Opens the page based on how the user clicks on a suggestion
 */
-browser.omnibox.onInputEntered.addListener((text, disposition) => {
-	let url = text;
+browser.omnibox.onInputEntered.addListener((url, disposition) => {
 	switch (disposition) {
 		case "currentTab":
 			browser.tabs.update({url});
@@ -66,19 +58,17 @@ browser.omnibox.onInputEntered.addListener((text, disposition) => {
 	}
 });
 
+function getSuggestionUrl(input) {
+	let url = buildScryfallURL(input);
+	return [{
+		content: url,
+		description: input
+	}];
+}
+
 function buildScryfallURL(text) {
 	console.log('Omnibox input changed, text is: ' + text);
 	let returnUrl = SEARCH_URL + text;
 	console.log('Returned url = ' + returnUrl)
 	return returnUrl;
-}
-
-function createSuggestionsFromResponse(response) {
-	return new Promise(resolve => {
-		let suggestions = [{
-			content: response.url,
-			description: 'search result'
-		}];
-		return resolve(suggestions);
-	});
 }
