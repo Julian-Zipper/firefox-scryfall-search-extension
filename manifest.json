@@ -3,7 +3,11 @@
   "name": "Firefox Scryfall Search",
   "description" : "To use, type '!scry' plus a search term into the url bar.",
   "version": "1.0",
-  //  "homepage_url": "my cool link here",
+  "homepage_url": "https://github.com/Julian-Zipper/firefox-scryfall-search-extension",
+  "icons": {
+    "48": "icon.png",
+    "96": "icon2x.png"
+  },
 
   "omnibox": { "keyword" : "!scry" },
   "permissions": ["*://scryfall.com/*"],
