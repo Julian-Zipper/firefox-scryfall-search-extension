@@ -31,3 +31,45 @@ https://scryfall.com/search?q=t%3Aspirit+t%3Adragon+set%3AKHM&unique=cards&as=gr
 
 search url: base url + /search?q=
 */
+
+/**
+* Fired whenever the user's input changes, after they have focused
+* the address bar and typed the keyword, followed by a space ("!scry ")
+*/
+browser.omnibox.onInputChanged.addListener((text, addSuggestions) => {
+	let headers = new Headers({"Accept": "application/json"});
+	let init = {method: 'GET', headers};
+	let url = buildScryfallURL(text);
+	let request = new Request(url, init);
+
+	fetch(request)
+		.then(createSuggestionsFromResponse)
+		.then(addSuggestions);
+});
+
+/**
+* Fired when the user accepts the extensions suggestion
+* Opens the page based on how the user clicks on a suggestion
+*/
+browser.omnibox.onInputEntered.addListener((text, disposition) => {
+	let url = text;
+	switch (disposition) {
+		case "currentTab":
+			browser.tabs.update({url});
+			break;
+		case "newForegroundTab":
+			browser.tabs.create({url});
+			break;
+		case "newBackgroundTab":
+			browser.tabs.create({url, active: false});
+			break;
+	}
+});
+
+function buildScryfallURL(text) {
+	
+}
+
+function createSuggestionsFromResponse(response) {
+
+}
